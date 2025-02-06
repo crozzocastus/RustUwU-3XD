@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 gtk = "0.9.0"
-
+mysql = "20.0"

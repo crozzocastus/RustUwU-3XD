@@ -1,4 +1,5 @@
 mod check; // Módulo responsável por checagem do sistema operacional
+mod database; // Módulo para manipulação de banco de dados
 mod validate; // Módulo para validação de arquivos
 
 use gtk::prelude::*;
@@ -7,25 +8,18 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 fn main() {
-    // Verifica o sistema operacional e instala o dbus se necessário
-    check::check_and_install_dbus();
-
-    // Inicializa o GTK
-    gtk::init().expect("Failed to initialize GTK.");
-
-    // Cria a janela principal e configura seus componentes
-    let window = create_main_window();
-
-    // Layout da interface
-    let vbox = create_layout(&window);
+    check::check_and_install_dbus(); // Verifica o sistema operacional e instala o dbus se necessário
+    database::handle_connection();  // Trata a conexão com o banco de dados
+    database::handle_error(); // Verifica se há erros ao buscar dados
+    gtk::init().expect("Failed to initialize GTK."); // Inicializa o GTK
+    
+    let window = create_main_window(); // Cria a janela principal e configura seus componentes
+    let vbox = create_layout(&window); // Layout da interface
 
     window.add(&vbox);
+    window.show_all(); // Mostrar tudo
 
-    // Mostrar tudo
-    window.show_all();
-
-    // Iniciar o loop GTK
-    gtk::main();
+    gtk::main(); // Iniciar o loop GTK
 }
 
 // Função que cria a janela principal
