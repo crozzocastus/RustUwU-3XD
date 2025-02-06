@@ -1,4 +1,5 @@
-mod check; //Módulo responsável por checagem do sistema operacional
+mod check; // Módulo responsável por checagem do sistema operacional
+mod validate; // Módulo para validação de arquivos
 
 use gtk::prelude::*;
 use gtk::{Button, Label, Window, WindowType, FileChooserDialog, FileChooserAction, MessageDialog, ButtonsType};
@@ -15,7 +16,7 @@ fn main() {
     // Criação da janela principal
     let window = Window::new(WindowType::Toplevel);
     window.set_title("RUST");
-    window.set_default_size(300, 100);
+    window.set_default_size(500, 500);
 
     // Criação de um rótulo (label) para exibir o número
     let label = Label::new(Some("0"));
@@ -51,20 +52,35 @@ fn main() {
 
             // Mostra o diálogo e captura a resposta
             if dialog.run() == gtk::ResponseType::Accept {
-                // Se o usuário escolher um arquivo, exibe uma mensagem
+                // Se o usuário escolher um arquivo, obtém o nome do arquivo selecionado
                 let file_name = dialog.get_filename().unwrap().to_str().unwrap().to_string();
-                let message = format!("Arquivo '{}' recebido com sucesso!", file_name);
                 
-                // Exibe um pop-up de sucesso
-                let msg_dialog = MessageDialog::new(
-                    Some(&window),
-                    gtk::DialogFlags::empty(),
-                    gtk::MessageType::Info,
-                    ButtonsType::Ok,
-                    &message,
-                );
-                msg_dialog.run();
-                msg_dialog.close();
+                // Verifica se o arquivo tem a extensão .json.gz antes de prosseguir
+                if validate::is_valid_file(&file_name) {
+                    let message = format!("Arquivo '{}' recebido com sucesso!", file_name);
+                    
+                    // Exibe um pop-up de sucesso
+                    let msg_dialog = MessageDialog::new(
+                        Some(&window),
+                        gtk::DialogFlags::empty(),
+                        gtk::MessageType::Info,
+                        ButtonsType::Ok,
+                        &message,
+                    );
+                    msg_dialog.run();
+                    msg_dialog.close();
+                } else {
+                    // Exibe um pop-up de erro caso o arquivo seja inválido
+                    let msg_dialog = MessageDialog::new(
+                        Some(&window),
+                        gtk::DialogFlags::empty(),
+                        gtk::MessageType::Error,
+                        ButtonsType::Ok,
+                        "Arquivo inválido! Apenas arquivos .json.gz são permitidos.",
+                    );
+                    msg_dialog.run();
+                    msg_dialog.close();
+                }
             }
 
             dialog.close();
