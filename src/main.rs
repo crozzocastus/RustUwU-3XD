@@ -1,9 +1,14 @@
+mod check; //Módulo responsável por checagem do sistema operacional
+
 use gtk::prelude::*;
 use gtk::{Button, Label, Window, WindowType, FileChooserDialog, FileChooserAction, MessageDialog, ButtonsType};
 use std::cell::RefCell;
 use std::rc::Rc;
 
 fn main() {
+    // Verifica o sistema operacional e instala o dbus se necessário
+    check::check_and_install_dbus();
+
     // Inicializa o GTK
     gtk::init().expect("Failed to initialize GTK.");
 
