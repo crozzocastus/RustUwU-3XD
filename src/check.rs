@@ -2,21 +2,17 @@ use std::env;
 use std::process::{Command, exit};
 
 pub fn check_and_install_dbus() {
-    // Detecta o sistema operacional
-    let os = env::consts::OS;
+    let os = env::consts::OS; // Detecta o sistema operacional
 
-    // Se for Linux, verifica se o dbus está instalado
     if os == "linux" {
-        // Verifica se o dbus está instalado
-        let output = Command::new("which")
+        let output = Command::new("which") // Verifica se o dbus está instalado
             .arg("dbus-launch")
             .output();
 
         match output {
             Ok(output) => {
                 if output.stdout.is_empty() {
-                    // Se dbus-launch não estiver instalado, tenta instalar
-                    println!("O D-Bus não está instalado. Instalando dbus-x11...");
+                    println!("O D-Bus não está instalado. Instalando dbus-x11..."); // Se dbus-launch não estiver instalado, tenta instalar
                     let install_output = Command::new("sudo")
                         .arg("apt-get")
                         .arg("install")

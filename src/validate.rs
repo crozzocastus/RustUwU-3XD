@@ -1,5 +1,3 @@
-//use crate::validate::is_valid_file;
-
 pub fn is_valid_file(file_name: &str) -> bool {
     file_name.ends_with(".json.gz")
 }
